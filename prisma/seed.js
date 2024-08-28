@@ -10,7 +10,7 @@ async function main() {
     data: {
       user_id: "00101000000",
       username: "admin",
-      password: hash("password", 10),
+      password: await hash("password", 10),
       name: "admin",
       user_phone: "12345678111",
       role: "admin",

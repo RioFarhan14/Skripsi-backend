@@ -1,8 +1,8 @@
 import cors from "cors";
-import { web } from "./application/web.js";
-import { logger } from "./application/logging.js";
-import { PORT } from "./utils/constant.js";
-import job from "./utils/cron-job.js";
+import { web } from "./src/application/web.js";
+import { logger } from "./src/application/logging.js";
+import { PORT } from "./src/utils/constant.js";
+import job from "./src/utils/cron-job.js";
 
 // Konfigurasi CORS
 const corsOptions = {
@@ -14,7 +14,7 @@ const corsOptions = {
 // Jika menggunakan Express.js sebagai framework utama
 web.use(cors(corsOptions));
 
-job;
+job();
 
 // Jalankan server
 web.listen(PORT, () => {

@@ -146,14 +146,15 @@ const updateBookingStatus = async () => {
 };
 
 // Jadwalkan tugas untuk dijalankan setiap menit
-const job = scheduleJob("* * * * *", () => {
-  console.log("Running cron job to update booking status...");
-  pushNotificationMember().catch((error) =>
-    console.error("Error executing pushNotification:", error)
-  );
-  updateBookingStatus().catch((error) =>
-    console.error("Error executing updateBookingStatus:", error)
-  );
-});
+const job = () =>
+  scheduleJob("* * * * *", () => {
+    console.log("Running cron job to update booking status...");
+    pushNotificationMember().catch((error) =>
+      console.error("Error executing pushNotification:", error)
+    );
+    updateBookingStatus().catch((error) =>
+      console.error("Error executing updateBookingStatus:", error)
+    );
+  });
 
 export default job;
