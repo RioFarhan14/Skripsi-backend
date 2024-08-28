@@ -1,5 +1,7 @@
 import admin from "firebase-admin";
-import serviceAccount from "./booking-app-skripsi-firebase-adminsdk-i7qv9-6abf9edbcc.json" assert { type: "json" };
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const serviceAccount = require("./booking-app-skripsi-firebase-adminsdk-i7qv9-6abf9edbcc.json");
 import { logger } from "../application/logging.js";
 
 admin.initializeApp({
@@ -7,7 +9,12 @@ admin.initializeApp({
 });
 
 // Function to send a push notification
-async function sendPushNotification(token, title, message, notification_id) {
+export async function sendPushNotification(
+  token,
+  title,
+  message,
+  notification_id
+) {
   try {
     const response = await admin.messaging().send({
       token: token,
@@ -25,7 +32,7 @@ async function sendPushNotification(token, title, message, notification_id) {
   }
 }
 
-async function sendPushNotificationAll(title, message, notification_id) {
+export async function sendPushNotificationAll(title, message, notification_id) {
   try {
     const response = await admin.messaging().send({
       topic: "general",
@@ -42,6 +49,3 @@ async function sendPushNotificationAll(title, message, notification_id) {
     logger.info("Error sending message:", error);
   }
 }
-
-// Export the functions correctly
-export { sendPushNotification, sendPushNotificationAll };
