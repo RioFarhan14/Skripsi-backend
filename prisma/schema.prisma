@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id String @id @db.VarChar(11)
+  username String @db.VarChar(15) @unique
+  password String @db.VarChar(64)
+  name String @db.VarChar(60)
+  user_phone String @db.VarChar(13) @unique
+  role Role
+  token String? @db.VarChar(100)
+  fcm_token String? @db.VarChar(225)
+  memberships Membership[]
+  bookings Booking[]
+  transactions Transaction[]
+  notifications Notification[]
+  notificationreads NotificationRead[]
+  @@map("users")
+}
+
+model Product {
+  product_id Int @id @default(autoincrement())
+  product_name String @db.VarChar(20)
+  product_type product_type
+  price Int @db.Int
+  image_url String @db.VarChar(100)
+  description String? @db.VarChar(225)
+  bookings Booking[]
+  transaction_details Transaction_detail[]
+  @@map("products")
+}
+
+model Membership {
+  membership_id String @id @db.VarChar(12)
+  user_id String @db.VarChar(11)
+  start_date DateTime
+  end_date DateTime
+  user User @relation(fields: [user_id], references: [user_id])
+  @@map("memberships")
+}
+
+
+model Booking {
+  booking_id String @id @db.VarChar(12)
+  user_id String @db.VarChar(11)
+  product_id Int
+  status status_booking
+  booking_date String @db.VarChar(10)
+  start_time String @db.VarChar(5)
+  end_time String @db.VarChar(5)
+  notification_sent Boolean @default(false)
+  transaction Transaction? 
+  user User @relation(fields: [user_id], references: [user_id])
+  product Product @relation(fields: [product_id], references: [product_id])
+  @@map("bookings")
+}
+
+model Transaction {
+  transaction_id String @id @db.VarChar(12)
+  user_id String @db.VarChar(11)
+  booking_id String? @unique
+  transaction_date DateTime
+  payment String? @db.VarChar(20)
+  snap_token String? @db.VarChar(255)
+  snap_redirect_url String? @db.VarChar(255)
+  status status_transaction
+  discount Int?
+  total_amount Int
+  transaction_details Transaction_detail[]
+  user User @relation(fields: [user_id], references: [user_id])
+  booking Booking? @relation(fields: [booking_id], references: [booking_id]) // Mendefinisikan relasi satu arah
+  @@map("transactions")
+}
+
+model Notification{
+  notification_id Int @id @default(autoincrement())
+  user_id String? @db.VarChar(11)
+  category_id Int
+  title String @db.VarChar(50)
+  message String @db.VarChar(255)
+  time DateTime @default(now())
+  user User? @relation(fields: [user_id], references: [user_id])
+  category CategoryOnNotification @relation(fields: [category_id], references: [category_id])
+  notificationreads NotificationRead[]
+  @@map("notifications")
+}
+
+model CategoryOnNotification{
+  category_id Int @id @default(autoincrement())
+  category_name String @db.VarChar(10)
+  notifications Notification[]
+@@map("Category_on_notifications")
+}
+
+model NotificationRead {
+id Int @id @default(autoincrement())
+is_read Boolean
+notification_id Int
+user_id String @db.VarChar(11)
+user User @relation(fields: [user_id], references: [user_id])
+notifications Notification @relation(fields: [notification_id], references: [notification_id])
+@@map("notification_reads")
+}
+
+model Transaction_detail {
+  transaction_detail_id Int @id @default(autoincrement())
+  transaction_id String @db.VarChar(12)
+  product_id Int
+  quantity Int
+  unit_price Int
+  transaction Transaction @relation(fields: [transaction_id], references: [transaction_id])
+  product Product @relation(fields: [product_id], references: [product_id]) 
+  @@map("transaction_details")
+}
+
+model Help {
+  help_id Int @id @default(autoincrement())
+  title String @db.VarChar(60)
+  message String @db.VarChar(225)
+}
+
+enum status_transaction {
+  PAID
+  PENDING
+  CANCELLED
+}
+
+enum status_booking {
+  Ongoing
+  Booked
+  Pending
+  Cancelled
+  Completed
+}
+
+enum product_type {
+  membership
+  field
+}
+
+enum Role {
+  admin
+  user
+}
