@@ -6,7 +6,7 @@ import job from "./src/utils/cron-job.js";
 
 // Konfigurasi CORS
 const corsOptions = {
-  origin: "http://localhost:5173", // Ganti dengan URL front-end Anda
+  origin: ["http://localhost:5173", "http://example.com", "https://another-site.com"], // Tambahkan URL front-end lainnya
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Metode yang diizinkan
   allowedHeaders: "Content-Type, Authorization", // Header yang diizinkan
 };
