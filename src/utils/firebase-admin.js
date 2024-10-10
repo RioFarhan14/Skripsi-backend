@@ -1,7 +1,7 @@
 import admin from "firebase-admin";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
-const serviceAccount = require("./booking-app-skripsi-firebase-adminsdk-i7qv9-6abf9edbcc.json");
+const serviceAccount = require("./booking-app-skripsi-firebase-adminsdk-i7qv9-d1d6be4049.json");
 import { logger } from "../application/logging.js";
 
 admin.initializeApp({
